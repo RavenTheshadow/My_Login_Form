@@ -39,7 +39,7 @@ public class IOFile {
             String Password     = "";
             String Name         = "";
             String Phone        = "";
-            String Description  = "";
+            String Description  = "None";
             String Role         = "";
 
             while((Line = Read.readLine()) != null) {
@@ -115,6 +115,7 @@ public class IOFile {
                     }
                 }
                 else if (Part[0].equals("Description:")) {
+                    Description = "";
                     for (int i = 1; i < Part.length - 1; i++) {
                         Description += (Part[i] + " ");
                     }
