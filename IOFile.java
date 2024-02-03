@@ -194,7 +194,7 @@ public class IOFile {
 
     public void Write(Container input) {
         CurID = Customer.size();
-        String File_Path = "C://Users//Ho Gia Thang//OneDrive//Desktop//JAVA//APP//DATA//Customer" + CurID + ".text";
+        String File_Path = new LOGIN().DATA_PATH + "//Customer" + CurID + ".text";
         FileWriter Write = null;
         try {
             String Username = input.GetUsername();

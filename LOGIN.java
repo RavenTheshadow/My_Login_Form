@@ -338,10 +338,10 @@ public class LOGIN {
         Alert.setIconImage(img.getImage());
         Alert.setLocationRelativeTo(null);
     }
-    
+    public String DATA_PATH = "C://Users//Ho Gia Thang//OneDrive//Desktop//JAVA//APP//DATA";
     public static void main(String[] args) {
         F   = new IOFile();
-        F.ImportData("C://Users//Ho Gia Thang//OneDrive//Desktop//JAVA//APP//DATA");
+        F.ImportData(new LOGIN().DATA_PATH);
         new LOGIN().DrawCanvas();
     }
 };
