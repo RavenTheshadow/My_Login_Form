@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.naming.InvalidNameException;
 public class IOFile {
+    private int CurID;
     private String Part;
     private Container Current;
     private List<Container> Customer    = new ArrayList<>();
@@ -12,7 +13,7 @@ public class IOFile {
         try {
             val = Integer.parseInt(str);
         } catch (NumberFormatException e) {
-            System.out.println("Not Valid Format");
+            new LOGIN().AlertCanvas("Error.png", "ID is not valid fomart!", 300, 120, 255, 0, 0);
         }
         return val;
     }
@@ -49,7 +50,7 @@ public class IOFile {
                         if(Part.length > 2) throw new InvalidNameException("Invalid Format");
                         ID = to_Int(Part[1]);    
                     } catch (InvalidNameException e) {
-                        System.out.println(e.getMessage());
+                        new LOGIN().AlertCanvas("Error.png", e.getMessage(), 500, 120, 255, 0, 0);
                         Read.close();
                         return false;
                     }
@@ -62,7 +63,7 @@ public class IOFile {
 
                         if(Part.length > 2) throw new InvalidNameException("Invalid Format");
                     } catch (InvalidNameException e) {
-                        System.out.println(e.getMessage());
+                        new LOGIN().AlertCanvas("Error.png", e.getMessage(), 500, 120, 255, 0, 0);
                         Read.close();
                         return false;
                     }
@@ -75,7 +76,7 @@ public class IOFile {
 
                         if(Part.length > 2) throw new InvalidNameException("Invalid Format");
                     } catch (InvalidNameException e) {
-                        System.out.println(e.getMessage());
+                        new LOGIN().AlertCanvas("Error.png", e.getMessage(), 500, 120, 255, 0, 0);
                         Read.close();
                         return false;
                     }
@@ -95,7 +96,7 @@ public class IOFile {
                         }
                         Name += Part[Part.length - 1];
                     } catch (InvalidNameException e) {
-                        System.out.println(e.getMessage());
+                        new LOGIN().AlertCanvas("Error.png", e.getMessage(), 500, 120, 255, 0, 0);
                         Read.close();
                         return false;
                     }
@@ -109,7 +110,7 @@ public class IOFile {
                                 throw new InvalidNameException("Phone is not valid format!!!");
                         }
                     } catch (InvalidNameException e) {
-                        System.out.println(e.getMessage());
+                        new LOGIN().AlertCanvas("Error.png", e.getMessage(), 500, 120, 255, 0, 0);
                         Read.close();
                         return false;
                     }
@@ -130,7 +131,7 @@ public class IOFile {
                                 throw new InvalidNameException("Role is not valid format!!!");
                         }
                     } catch (InvalidNameException e) {
-                        System.out.println(e.getMessage());
+                        new LOGIN().AlertCanvas("Error.png", e.getMessage(), 500, 120, 255, 0, 0);
                         Read.close();
                         return false;
                     }
@@ -144,7 +145,7 @@ public class IOFile {
                         }
                         Description += Part[Part.length - 1];
                     } catch (InvalidNameException e) {
-                        System.out.println(e.getMessage());
+                        new LOGIN().AlertCanvas("Error.png", e.getMessage(), 500, 120, 255, 0, 0);
                         Read.close();
                         return false;
                     }
@@ -166,7 +167,9 @@ public class IOFile {
             Number++;
         }
     }
-    
+    private void Add_Container(Container cus) {
+        Customer.add(cus);
+    }
     public boolean Find(String user, String pass) {
         for (int i = 0; i < Customer.size(); i++) {
             if(Customer.get(i).GetUsername().equals(user) && Customer.get(i).getPassword().equals(pass)) {
@@ -178,14 +181,53 @@ public class IOFile {
     }
     public Container getUser() {
         try {
-            if(Current == null) throw new Error("User doesn't found!!!");
+            if(Current == null) throw new Error("User doesn't found!");
         } catch (Error e) {
-            System.out.println(e.getMessage());
+            new LOGIN().AlertCanvas("Error.png", e.getMessage(), 500, 120, 255, 0, 0);
         }
         return Current;
     }
     public void Print_Info() {
         System.out.println("Name: "+ Current.getName() + "\nID: " + Current.GetID()
             + "\nPhone: " + Current.getPhone() + "\nDescription: " + Current.Description());
+    }
+
+    public void Write(Container input) {
+        CurID = Customer.size();
+        String File_Path = "C://Users//Ho Gia Thang//OneDrive//Desktop//JAVA//APP//DATA//Customer" + CurID + ".text";
+        FileWriter Write = null;
+        try {
+            String Username = input.GetUsername();
+            if(Container(Username)) 
+                    {throw new InvalidNameException("Username mustn't contain the specal Character!");} 
+            
+            String Password = input.getPassword();
+                if(Container(Password)) 
+                    {throw new InvalidNameException("Password mustn't contain the specal Character!");} 
+                
+            String Name = input.getName();
+                for(int i = 0; i < Name.length(); i++) {
+                        if(!Character.isAlphabetic(Name.charAt(i)) || !Character.isWhitespace(Name.charAt(i))) 
+                            throw new InvalidNameException("Name is not valid format!!!");
+                }
+            String Phone = input.getPhone();
+                for(int j = 0; j < Phone.length(); j++) {
+                    if(!Character.isDigit(Phone.charAt(j))) 
+                        throw new InvalidNameException("Phone is not valid format!!!");
+                }
+            Write = new FileWriter(File_Path);
+            String SS = "ID: "+ (CurID - 1) +"\n"
+                        +"Username: "   + input.GetUsername()   +"\n"
+                        +"Password: "   + input.getPassword()   +"\n"
+                        +"Name: "       + input.getName()       +"\n"
+                        +"Phone: "      + input.getPhone()      +"\n"
+                        +"Description: "+ input.Description()   +"\n"
+                        +"Role: "       + input.Role();
+            Write.write(SS);
+            Add_Container(input);
+            Write.close();
+        } catch (Exception e) {
+            new LOGIN().AlertCanvas("Error.png", e.getMessage(), 500, 120, 255, 0, 0);
+        }
     }
 }

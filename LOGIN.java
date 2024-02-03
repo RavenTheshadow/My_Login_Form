@@ -7,16 +7,17 @@ import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.io.IOException;
 public class LOGIN {
     private static IOFile F;
     private void DrawCanvas() {
         ImageIcon img = new ImageIcon("H1.jpg");
         JFrame LoginFrame = new JFrame("Login");
-        LoginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JLabel Text = new JLabel("Please login your account!!");
         JButton RegisterButton;
         JLabel Login;
@@ -68,26 +69,26 @@ public class LOGIN {
                 String name = username.getText();
                 String pass = new String(password.getPassword());
                     if(name.equals("")) {
-                        System.out.println("Login Fail!!");
+                        AlertCanvas("Alert.png", "Login Fail!", 300, 120, 255, 0, 0);
                         Text.setText("Pls input your username!!!");
                         Text.setFont(new java.awt.Font("Segoe UI", 1, 10));
                         Text.setForeground(new Color(255, 0, 0));
                         Text.setBounds(140, 60 + 22 + 26 + 30, 230, 20);
                     }
                     else if (pass.equals("")) {
-                        System.out.println("Login Fail!!");
+                        AlertCanvas("Alert.png", "Login Fail!", 300, 120, 255, 0, 0);
                         Text.setText("Pls input your password!!!");
                         Text.setFont(new java.awt.Font("Segoe UI", 1, 10));
                         Text.setForeground(new Color(255, 0, 0));
                         Text.setBounds(140, 60 + 22 + 26 + 30, 230, 20);
                     }
                     else if (F.Find(name, pass)) {
-                        System.out.println("Login Success!!");
+                        AlertCanvas("Success.png", "Login Success!", 300, 120, 255, 0, 0);
                         F.Print_Info();
                         LoginFrame.dispose();
                         StatusCanvas();
                     } else {
-                        System.out.println("Login Fail!!");
+                        AlertCanvas("Alert.png", "Login Fail!", 300, 120, 255, 0, 0);
                         Text.setText("Incorrect username or password!!!");
                         Text.setFont(new java.awt.Font("Segoe UI", 1, 10));
                         Text.setForeground(new Color(255, 0, 0));
@@ -128,6 +129,7 @@ public class LOGIN {
         LoginFrame.setVisible(true);
         LoginFrame.setLocation(600,250);
         LoginFrame.setIconImage(img.getImage());
+        LoginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     //_______________________________________________________________________________________________________________________________________
@@ -211,7 +213,33 @@ public class LOGIN {
         jButton1.setBounds(140, 300, 100, 30);
         //___________________________________________________________________________________________
         //Summittion:
+        jButton1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String Username = username.getText();
+                    if(Username.equals("")) throw new IOException("Username can't be empty");
 
+                    String Password = new String(password.getPassword());
+                    if(Password.equals("")) throw new IOException("Password can't be empty");
+
+                    String Name = name.getText();
+                    if(Name.equals("")) throw new IOException("Name can't be empty");
+
+                    String Phone = phone.getText();
+                    if(Phone.equals("")) throw new IOException("Phone can't be empty");
+
+                    String description = Description.getText(); 
+                    if(description.equals("")) description = "None";
+
+                    String Role = "User";
+                    RegisterFrame.dispose();
+                    DrawCanvas();
+                    F.Write(new Container(0, Username, Password, Name, Phone, description, Role));
+                } catch (IOException E) {
+                    AlertCanvas("Error.png", E.getMessage(), 500, 120, 255, 0, 0);
+                }
+            }
+        });
         //___________________________________________________________________________________________
         RegisterFrame.add(jLabel1);
         RegisterFrame.add(jLabel2);
@@ -276,8 +304,7 @@ public class LOGIN {
         JLabel jLabel8 = new JLabel();
         jLabel8.setText(User.Description());
         jLabel8.setBounds(132, 130 + 60, 100, 20);
-
-        
+    
         StatusFrame.add(jLabel1);
         StatusFrame.add(jLabel2);
         StatusFrame.add(jLabel3);
@@ -293,6 +320,25 @@ public class LOGIN {
         StatusFrame.setVisible(true);
         StatusFrame.setIconImage(img.getImage());
     }
+    
+    public void AlertCanvas(String Picture_Path, String Text, int Width, int Height, int R, int G, int B) {
+        JFrame Alert    = new JFrame("Alert");
+        ImageIcon img   = new ImageIcon("H1.jpg");
+        JLabel LB = new JLabel(new ImageIcon(Picture_Path));
+        LB.setText(Text);
+        LB.setFont(new java.awt.Font("Segoe UI Historic", 1, 16));
+        LB.setForeground(new java.awt.Color(R, G, B));
+
+        Alert.add(LB);
+        Alert.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        Alert.setLayout(new FlowLayout(FlowLayout.CENTER));
+        Alert.setLocation(600,300);
+        Alert.setSize(Width, Height);
+        Alert.setVisible(true);
+        Alert.setIconImage(img.getImage());
+        Alert.setLocationRelativeTo(null);
+    }
+    
     public static void main(String[] args) {
         F   = new IOFile();
         F.ImportData("C://Users//Ho Gia Thang//OneDrive//Desktop//JAVA//APP//DATA");
